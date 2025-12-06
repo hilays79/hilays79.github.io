@@ -14,9 +14,9 @@ timezone: Asia/Shanghai
 # jekyll-seo-tag settings › https://github.com/jekyll/jekyll-seo-tag/blob/master/docs/usage.md
 # ↓ --------------------------
 
-title: Chirpy # the main title
+title: Hilay Shah # the main title
 
-tagline: A text-focused Jekyll theme # it will display as the subtitle
+tagline: Astrophysics PhD student at the Australian National University # it will display as the subtitle
 
 description: >- # used by seo meta and the atom feed
   A minimal, responsive and feature-rich Jekyll theme for technical writing.
@@ -26,23 +26,19 @@ description: >- # used by seo meta and the atom feed
 url: ""
 
 github:
-  username: github_username # change to your GitHub username
-
-twitter:
-  username: twitter_username # change to your Twitter username
+  username: hilays79 # change to your GitHub username
 
 social:
   # Change to your full name.
   # It will be displayed as the default author of the posts and the copyright owner in the Footer
-  name: your_full_name
-  email: example@domain.com # change to your email address
+  name: Hilay Shah
+  email: hilay.shah@anu.edu.au # change to your email address
   links:
     # The first element serves as the copyright owner's link
-    - https://twitter.com/username # change to your Twitter homepage
-    - https://github.com/username # change to your GitHub homepage
+    - https://github.com/hilays79 # change to your GitHub homepage
     # Uncomment below to add more social links
     # - https://www.facebook.com/username
-    # - https://www.linkedin.com/in/username
+    - https://www.linkedin.com/in/hilays79/
 
 # Site Verification Settings
 webmaster_verifications:
@@ -95,10 +91,19 @@ theme_mode: # [light | dark]
 # will be added to all media resources (site avatar, posts' images, audio and video files) paths starting with '/'
 #
 # e.g. 'https://cdn.com'
-cdn: "https://chirpy-img.netlify.app"
+cdn: ""
 
 # the avatar on sidebar, support local or CORS resources
 avatar: "/commons/avatar.jpg"
+
+# Optional homepage background image (local path or full URL). Example: "/assets/img/hero.jpg"
+home_background: ""
+
+# Optional larger profile image for the right column on the homepage. Falls back to `avatar` if empty.
+profile_image: "/assets/img/right_image.JPG"
+
+# Small avatar used in the sidebar
+avatar: "/assets/img/left_image.jpg"
 
 # The URL of the site-wide social preview image used in SEO `og:image` meta tag.
 # It can be overridden by a customized `page.image` in front matter.
@@ -170,6 +175,12 @@ collections:
   tabs:
     output: true
     sort_by: order
+  projects:
+    output: true
+    permalink: /projects/:name/
+  publications:
+    output: true
+    permalink: /publications/:name/
 
 defaults:
   - scope:
@@ -224,3 +235,12 @@ jekyll-archives:
   permalinks:
     tag: /tags/:name/
     category: /categories/:name/
+
+# Collections for structured content
+collections:
+  projects:
+    output: true
+    permalink: /projects/:name/
+  publications:
+    output: true
+    permalink: /publications/:name/

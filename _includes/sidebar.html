@@ -25,69 +25,77 @@
           <span>{{ site.data.locales[include.lang].tabs.home | upcase }}</span>
         </a>
       </li>
+      <!-- static links (ensure these pages always appear) -->
+      <li class="nav-item{% if page.url == '/research/' %}{{ " active" }}{% endif %}">
+        <a href="{{ '/research/' | relative_url }}" class="nav-link">
+          <i class="fa-fw fas fa-flask"></i>
+          <span>RESEARCH</span>
+        </a>
+      </li>
+      <li class="nav-item{% if page.url == '/publications/' %}{{ " active" }}{% endif %}">
+        <a href="{{ '/publications/' | relative_url }}" class="nav-link">
+          <i class="fa-fw fas fa-book"></i>
+          <span>PUBLICATIONS</span>
+        </a>
+      </li>
+      <li class="nav-item{% if page.url == '/cv/' %}{{ " active" }}{% endif %}">
+        <a href="{{ '/cv/' | relative_url }}" class="nav-link">
+          <i class="fa-fw fas fa-id-card"></i>
+          <span>CV</span>
+        </a>
+      </li>
+      <li class="nav-item{% if page.url == '/extra/' %}{{ " active" }}{% endif %}">
+        <a href="{{ '/extra/' | relative_url }}" class="nav-link">
+          <i class="fa-fw fas fa-ellipsis-h"></i>
+          <span>EXTRA</span>
+        </a>
+      </li>
       <!-- the real tabs -->
-      {% for tab in site.tabs %}
-        <li class="nav-item{% if tab.url == page.url %}{{ " active" }}{% endif %}">
-          <a href="{{ tab.url | relative_url }}" class="nav-link">
-            <i class="fa-fw {{ tab.icon }}"></i>
-            {% capture tab_name %}{{ tab.url | split: '/' }}{% endcapture %}
+      {% comment %} Prefer the `tabs` collection, but fall back safely if it's missing. {% endcomment %}
+      {% if site.collections and site.collections.tabs and site.collections.tabs.docs %}
+        {% assign tabs_collection = site.collections.tabs.docs | sort: 'order' %}
+      {% elsif site.tabs %}
+        {% assign tabs_collection = site.tabs %}
+      {% else %}
+        {% assign tabs_collection = '' %}
+      {% endif %}
 
-            <span>{{ site.data.locales[include.lang].tabs.[tab_name] | default: tab.title | upcase }}</span>
-          </a>
-        </li>
-        <!-- .nav-item -->
-      {% endfor %}
+      {% if tabs_collection and tabs_collection != empty %}
+        {% for tab in tabs_collection %}
+          {% assign tab_data = tab.data | default: tab %}
+          {% assign tab_url = tab.url | default: tab_data.permalink | default: tab.path %}
+          <li class="nav-item{% if tab_url == page.url %}{{ " active" }}{% endif %}">
+            <a href="{{ tab_url | relative_url }}" class="nav-link">
+              <i class="fa-fw {{ tab_data.icon }}"></i>
+              {% assign tab_name = tab_url | split: '/' | last | replace: '.html', '' %}
+              <span>{{ site.data.locales[include.lang].tabs[tab_name] | default: tab_data.title | upcase }}</span>
+            </a>
+          </li>
+        {% endfor %}
+      {% endif %}
     </ul>
   </nav>
 
-  <div class="sidebar-bottom d-flex flex-wrap  align-items-center w-100">
-    {% unless site.theme_mode %}
-      <button type="button" class="btn btn-link nav-link" aria-label="Switch Mode" id="mode-toggle">
-        <i class="fas fa-adjust"></i>
-      </button>
-
-      {% if site.data.contact.size > 0 %}
-        <span class="icon-border"></span>
-      {% endif %}
-    {% endunless %}
-
+  <div class="sidebar-bottom d-flex flex-wrap align-items-center w-100 justify-content-center">
+    <a
+      href="mailto:{{ site.social.email }}"
+      aria-label="email"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="mx-2"
+    >
+      <i class="fas fa-envelope"></i>
+    </a>
     {% for entry in site.data.contact %}
-      {% case entry.type %}
-        {% when 'github', 'twitter' %}
-          {%- capture url -%}
-            https://{{ entry.type }}.com/{{ site[entry.type].username }}
-          {%- endcapture -%}
-        {% when 'email' %}
-          {% assign email = site.social.email | split: '@' %}
-          {%- capture url -%}
-            javascript:location.href = 'mailto:' + ['{{ email[0] }}','{{ email[1] }}'].join('@')
-          {%- endcapture -%}
-        {% when 'rss' %}
-          {% assign url = '/feed.xml' | relative_url %}
-        {% else %}
-          {% assign url = entry.url %}
-      {% endcase %}
-
-      {% if url %}
+      {% if entry.type == 'github' %}
         <a
-          href="{{ url }}"
-          aria-label="{{ entry.type }}"
-          {% assign link_types = '' %}
-
-          {% unless entry.noblank %}
-            target="_blank"
-            {% assign link_types = 'noopener noreferrer' %}
-          {% endunless %}
-
-          {% if entry.type == 'mastodon' %}
-            {% assign link_types = link_types | append: ' me' | strip %}
-          {% endif %}
-
-          {% unless link_types == empty %}
-            rel="{{ link_types }}"
-          {% endunless %}
+          href="https://github.com/{{ site.github.username }}"
+          aria-label="github"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="mx-2"
         >
-          <i class="{{ entry.icon }}"></i>
+          <i class="fab fa-github"></i>
         </a>
       {% endif %}
     {% endfor %}

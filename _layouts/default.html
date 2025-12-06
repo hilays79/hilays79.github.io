@@ -1,7 +1,6 @@
 ---
 layout: compress
 ---
-
 <!doctype html>
 
 {% include origin-type.html %}
@@ -19,24 +18,46 @@ layout: compress
   <body>
     {% include sidebar.html lang=lang %}
 
-    <div id="main-wrapper" class="d-flex justify-content-center">
+    <div id="main-wrapper" class="d-flex justify-content-start">
+      {% if page.permalink == '/research/' or page.url == '/research/' %}
+      <!-- Use full width and remove extra horizontal padding for research pages -->
+      <div class="container-fluid d-flex flex-column px-0">
+      {% else %}
       <div class="container d-flex flex-column px-xxl-5">
+      {% endif %}
+        <!-- Remove topbar and search -->
+        {%- comment -%}
         {% include topbar.html lang=lang %}
+        {%- endcomment -%}
 
         <div class="row flex-grow-1">
-          <main aria-label="Main Content" class="col-12 col-lg-11 col-xl-9 px-md-4">
-            {% if layout.refactor or layout.layout == 'default' %}
-              {% include refactor-content.html content=content lang=lang %}
-            {% else %}
-              {{ content }}
-            {% endif %}
-          </main>
+          {% if page.permalink == '/research/' or page.url == '/research/' or page.layout == 'project-list' %}
+            <!-- Let the research/project-list layout render its own full-width container -->
+            {{ content }}
+          {% else %}
+            <main aria-label="Main Content" class="col-12 col-lg-11 col-xl-9 px-md-4">
+              {% if layout.refactor or layout.layout == 'default' %}
+                {% include refactor-content.html content=content lang=lang %}
+              {% else %}
+                {{ content }}
+              {% endif %}
+            </main>
+          {% endif %}
 
           <!-- panel -->
+          {% unless page.permalink == '/research/' or page.url == '/research/' or page.layout == 'project-list' %}
           <aside aria-label="Panel" id="panel-wrapper" class="col-xl-3 ps-2 text-muted">
             <div class="access">
-              {% include_cached update-list.html lang=lang %}
-              {% include_cached trending-tags.html lang=lang %}
+              {% if page.layout == 'home' %}
+                <!-- On homepage show profile image in panel -->
+                <div class="home-panel-profile text-center">
+                  {% assign profile = site.profile_image | default: site.avatar %}
+                  <img src="{{ profile | relative_url }}" alt="{{ site.title }}" class="home-panel-image img-fluid">
+                </div>
+              {% else %}
+                {% include_cached update-list.html lang=lang %}
+                {% include_cached trending-tags.html lang=lang %}
+              {% endif %}
             </div>
 
             {% for _include in layout.panel_includes %}
@@ -44,11 +65,16 @@ layout: compress
               {% include {{ _include_path }} lang=lang %}
             {% endfor %}
           </aside>
+          {% endunless %}
         </div>
 
         <div class="row">
           <!-- tail -->
+          {% if page.permalink == '/research/' or page.url == '/research/' or page.layout == 'project-list' %}
+          <div id="tail-wrapper" class="col-12 px-md-4">
+          {% else %}
           <div id="tail-wrapper" class="col-12 col-lg-11 col-xl-9 px-md-4">
+          {% endif %}
             {% for _include in layout.tail_includes %}
               {% assign _include_path = _include | append: '.html' %}
               {% include {{ _include_path }} lang=lang %}
@@ -58,7 +84,10 @@ layout: compress
           </div>
         </div>
 
+        <!-- Remove search bar -->
+        {%- comment -%}
         {% include_cached search-results.html lang=lang %}
+        {%- endcomment -%}
       </div>
 
       <aside aria-label="Scroll to Top">

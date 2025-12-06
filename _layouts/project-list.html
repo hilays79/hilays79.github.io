@@ -1,0 +1,51 @@
+---
+layout: default
+---
+{% include lang.html %}
+
+{% if page.permalink == '/research/' or page.url == '/research/' %}
+<div class="container-fluid py-4 research-container">
+{% else %}
+<div class="container py-4">
+{% endif %}
+  <header class="mb-4">
+    <h1>{{ page.title | default: 'Research' }}</h1>
+    {% if page.description %}
+      <p class="lead">{{ page.description }}</p>
+    {% endif %}
+  </header>
+
+  <div class="row">
+    {% if page.permalink == '/research/' or page.url == '/research/' %}
+      <!-- For research page use the widest possible main column and remove the aside entirely -->
+      <main class="col-12">
+        <div class="page-content mb-4">
+          {{ content }}
+        </div>
+
+        <div class="projects-list">
+          {% for project in site.projects %}
+            {% include project-card.html project=project %}
+          {% endfor %}
+        </div>
+      </main>
+    {% else %}
+      <main class="col-12 col-lg-9">
+        <!-- Render page content (so `research/index.md` body appears) -->
+        <div class="page-content mb-4">
+          {{ content }}
+        </div>
+
+        <div class="projects-list">
+          {% for project in site.projects %}
+            {% include project-card.html project=project %}
+          {% endfor %}
+        </div>
+      </main>
+
+      <aside class="col-12 col-lg-3">
+        <!-- Right panel: keep default panel content (handled by default layout) -->
+      </aside>
+    {% endif %}
+  </div>
+</div>
